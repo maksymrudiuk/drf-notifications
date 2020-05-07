@@ -54,6 +54,9 @@ class NotificationLevel(models.Model):
 
 
 class NotificationTemplate(TimeStampedModel):
+    """[summary]
+        TimeStampedModel {[model]} -- provide <created> and <modified> DateTime fields
+    """
 
     name = models.CharField(
         verbose_name=_('Name'),

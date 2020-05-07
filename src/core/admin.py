@@ -9,4 +9,5 @@ class NotificationLevelAdmin(admin.ModelAdmin):
 
 @admin.register(NotificationTemplate)
 class NotificationTemplateAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['slug', 'name', 'level', 'is_active', 'created', 'modified']
+    list_editable = ['is_active']

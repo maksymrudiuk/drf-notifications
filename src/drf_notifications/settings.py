@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third party
+    'django_extensions',
     'rest_framework',
     'ckeditor',
 
@@ -152,7 +153,7 @@ STATIC_URL = '/static/'
 # ----------------------------------------------------------------------------------------------------------------------
 # Mailing settings
 # ----------------------------------------------------------------------------------------------------------------------
-EMAIL_HOST = env_config('EMAIL_HOST_USER', cast=str)
+EMAIL_HOST = env_config('EMAIL_HOST', cast=str)
 EMAIL_HOST_USER = env_config('EMAIL_HOST_USER', cast=str)
 EMAIL_HOST_PASSWORD = env_config('EMAIL_HOST_PASSWORD', cast=str)
 EMAIL_PORT = env_config('EMAIL_PORT', default=587, cast=int)

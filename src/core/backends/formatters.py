@@ -10,11 +10,11 @@ class BaseContentFormatter:
 
 class ContentHTMLFormatter(BaseContentFormatter):
 
-    def __call__(self):
+    def render(self):
         return self.template.render(self.context)
 
 
 class ContentTextFormatter(ContentHTMLFormatter):
 
-    def __call__(self):
-        return strip_tags(super(ContentTextFormatter, self).create())
+    def render(self):
+        return strip_tags(super(ContentTextFormatter, self).render())

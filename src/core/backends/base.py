@@ -1,34 +1,19 @@
 from collections import OrderedDict
 
-from django.template import Context, Template
+from django.template import Template, Context
 from django.utils.html import strip_tags
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
-from ..utils import get_object_or_none
+from core.utils import get_object_or_none
 
 
 class BaseModelNotification:
-    """Base model Notification class.
-
-    Arguments:
-        notification_model { models.Model } -- Notification db model
-        default_subject {str} -- default: [str]
-
-    Implemented methods:
-        get_notification
-        validate_recipients
-        get_subject
-
-    Not Implemented methods:
-        send
-        perform_send
-    """
 
     model = None
     default_subject = str
 
-    def __init__(self, name: str, recipient: str, context=dict(), *args, **kwargs):
+    def __init__(self, slug: str, recipient: str, context=dict(), *args, **kwargs):
         """ Constructor.
 
         Arguments:
@@ -38,8 +23,8 @@ class BaseModelNotification:
             context {dict} -- context to render notification message.
         """
 
+        self.notification = self.get_notification_template(slug)
         self.context = context
-        self.notification_template = self.get_notification_template(name)
         self.recipient = recipient
         self._type = self.__class__.__name__
 
@@ -63,19 +48,28 @@ class BaseModelNotification:
         """
 
         template = self.get_subject_template()
-        return self.validate_subject(template.render(self.context))
+        context = self.get_context(convert=True)
+        return self.validate_subject(template.render(context))
 
-    def get_notification_template(self, name: str):
+    def get_context(self, convert=False) -> Context:
+        if self.context and isinstance(self.context, (dict, OrderedDict)):
+            if self.notification.template and not convert:
+                return self.context
+            return Context(self.context)
+        else:
+            raise TypeError("Context must be a dict.")
+
+    def get_notification_template(self, slug: str):
         """ Implemented Method.
 
         Arguments:
-            name {str} -- notification slug.
+            slug {str} -- notification slug.
 
         Returns:
-            [notification_model] -- notification model instance
+            [model] -- notification model instance
         """
 
-        obj = get_object_or_none(self.notification_model, slug=name)
+        obj = get_object_or_none(self.model, slug=slug)
         if not obj:
             raise ObjectDoesNotExist()
         return obj
@@ -108,8 +102,8 @@ class BaseModelNotification:
             subject {Template} -- Notification subject template.
         """
 
-        if self.notification:
-            return Template(self.notification.subject)
+        subject_template = self.validate_template_string(self.notification.subject)
+        return Template(subject_template)
 
     @staticmethod
     def validate_subject(subject: str):
@@ -118,8 +112,24 @@ class BaseModelNotification:
         Returns:
             subject {str} -- Notification validated subject.
         """
-
         return strip_tags(subject).replace('\r', '').replace('\n', '')
+
+    @staticmethod
+    def validate_template_string(template_string):
+
+        clean_template = template_string
+
+        replace_map = (
+            ("{{ ", "{{"),
+            (" }}", "}}"),
+            ("&nbsp;}}", "}}"),
+            ("{{&nbsp;", "{{"),
+        )
+
+        for _from, _to in replace_map:
+            clean_template = clean_template.replace(_from, _to)
+
+        return clean_template
 
 
 class ModelNotification(BaseModelNotification):
@@ -131,7 +141,7 @@ class ModelNotification(BaseModelNotification):
     """
 
     # Prevent python cross-import error
-    from ..models import Notification
+    from ..models import NotificationTemplate
 
-    model = Notification
+    model = NotificationTemplate
     default_subject = 'Subject'

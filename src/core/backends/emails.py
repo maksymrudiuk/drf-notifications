@@ -45,6 +45,6 @@ class BaseEmailModelNotification(TemplateContentMixin, ModelNotification):
         email = self.create()
         self.perform_send(email)
 
-    @logging_sending_errors()
+    @logging_sending_errors
     def perform_send(self, instance, **kwargs):
         instance.send()
