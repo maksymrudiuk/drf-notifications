@@ -4,8 +4,8 @@ from django.conf import settings
 
 from .base import ModelNotification
 from .mixins import TemplateContentMixin
-from .decorators import logging_sending_errors
 from .formatters import ContentTextFormatter
+from .decorators import logging_sending_errors
 
 
 logger = logging.getLogger('django')
@@ -46,5 +46,5 @@ class BaseEmailModelNotification(TemplateContentMixin, ModelNotification):
         self.perform_send(email)
 
     @logging_sending_errors
-    def perform_send(self, instance, **kwargs):
+    def perform_send(self, instance):
         instance.send()

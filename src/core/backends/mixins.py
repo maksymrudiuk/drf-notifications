@@ -1,7 +1,5 @@
-from collections import OrderedDict
-
 from django.contrib.auth import get_user_model
-from django.template import Context, Template
+from django.template import Template
 from django.template.loader import get_template as django_get_template
 from core.utils import reserved_getattr
 from .formatters import ContentHTMLFormatter

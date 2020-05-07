@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third party
+    'django_celery_results',
     'django_extensions',
     'rest_framework',
     'ckeditor',
@@ -254,3 +255,10 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': datetime.timedelta(days=1),
 }
 # ----------------------------------------------------------------------------------------------------------------------
+
+
+# Import celery settings
+try:
+    from .celery.settings import *
+except ImportError:
+    pass

@@ -5,7 +5,9 @@ from django.utils.html import strip_tags
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
+from core.senders.default import SyncDefaultSender
 from core.utils import get_object_or_none
+from .decorators import logging_sending_errors
 
 
 class BaseModelNotification:
@@ -13,7 +15,7 @@ class BaseModelNotification:
     model = None
     default_subject = str
 
-    def __init__(self, slug: str, recipient: str, context=dict(), *args, **kwargs):
+    def __init__(self, slug: str, recipient: str, context=dict(), sender=SyncDefaultSender, *args, **kwargs):
         """ Constructor.
 
         Arguments:
@@ -27,14 +29,16 @@ class BaseModelNotification:
         self.context = context
         self.recipient = recipient
         self._type = self.__class__.__name__
+        self.sender = sender
 
     def send(self, **kwargs):
         """ Not Implemented Method."""
         raise NotImplementedError("Method send must be implemented.")
 
-    def perform_send(self, **kwargs):
+    @logging_sending_errors
+    def perform_send(self, instance):
         """ Not Implemented Method."""
-        raise NotImplementedError("Method perform_send must be implemented.")
+        raise NotImplementedError("Method perform send must be implemented.")
 
     def get_message(self):
         """ Not Implemented Method."""
