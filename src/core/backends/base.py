@@ -15,7 +15,7 @@ class BaseModelNotification:
     model = None
     default_subject = str
 
-    def __init__(self, slug: str, recipient: str, context=dict(), sender=SyncDefaultSender, *args, **kwargs):
+    def __init__(self, slug: str, recipient: str, context=dict(), *args, **kwargs):
         """ Constructor.
 
         Arguments:
@@ -29,7 +29,6 @@ class BaseModelNotification:
         self.context = context
         self.recipient = recipient
         self._type = self.__class__.__name__
-        self.sender = sender
 
     def send(self, **kwargs):
         """ Not Implemented Method."""
