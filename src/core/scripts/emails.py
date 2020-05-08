@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
-
-from decouple import config
 from core.models import NotificationTemplate
-from core.backends.generics import EmailModelNotification, EmailMultiAlternativesModelNotification
+# from core.backends.generics import EmailModelNotification, EmailMultiAlternativesModelNotification
+from core.senders import CeleryDefaultSender, SyncDefaultSender
 
 
 def run():
@@ -11,8 +10,22 @@ def run():
     user = User.objects.get(id=1)
     recipient = 'maksym.rudiuk@gmail.com'
     context = {
-        'user': user
+        'username': user.username,
+        'first_name': user.first_name,
+        'last_name': user.last_name
     }
 
-    mail = EmailModelNotification(notification_slug, recipient, context)
-    mail.send()
+    sender = CeleryDefaultSender(
+        notification_slug,
+        'EmailMultiAlternativesModelNotification',
+        recipient,
+        context
+    )
+    sync_sender = SyncDefaultSender(
+        notification_slug,
+        'EmailMultiAlternativesModelNotification',
+        recipient,
+        context
+    )
+    sender.send()
+    sync_sender.send()
