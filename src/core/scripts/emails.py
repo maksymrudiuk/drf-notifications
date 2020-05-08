@@ -28,4 +28,4 @@ def run():
         context
     )
     sender.send()
-    sync_sender.send()
+    # sync_sender.send()
