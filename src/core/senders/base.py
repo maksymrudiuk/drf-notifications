@@ -16,10 +16,10 @@ class BaseNotificationSingleSender:
         self.module_name = self.get_module_name(notification_cls)
 
     def send(self):
-        self.__handler(self.module_name, self.slug, self.recipient, self.context)
+        self.send_notification(self.module_name, self.slug, self.recipient, self.context)
 
     @staticmethod
-    def __handler(module_name, slug, recipient, context):
+    def send_notification(module_name, slug, recipient, context, *args, **kwargs):
         notification_class = import_by_string(module_name)
         notification = notification_class(slug=slug, recipient=recipient, context=context)
         notification.send()

@@ -1,5 +1,6 @@
 from celery import shared_task
-from core.tasks import send as celery_send
+from core.celery import task_method
+# from core.tasks import send as celery_send
 from .base import BaseNotificationSingleSender
 
 
@@ -10,11 +11,17 @@ class SyncDefaultSender(BaseNotificationSingleSender):
 class CeleryDefaultSender(BaseNotificationSingleSender):
 
     def send(self):
-        celery_send.delay(self.module_name, self.slug, self.recipient, self.context)
+        self.send_notification.delay(self.module_name, self.slug, self.recipient, self.context)
 
-    # ! Not working yet need research
+    # ! Strange code
     @staticmethod
-    @shared_task
-    def __handler(module_name, slug, recipient, context):
-        super(CeleryDefaultSender, CeleryDefaultSender).__handler(
-            module_name, slug, recipient, context)
+    @shared_task(name="core.CeleryDefaultSender.send_notification", bind=True, filter=task_method)
+    def send_notification(task, module_name, slug, recipient, context, *args, **kwargs):
+        super(CeleryDefaultSender, CeleryDefaultSender).send_notification(
+            module_name=module_name,
+            slug=slug,
+            recipient=recipient,
+            context=context,
+            *args,
+            **kwargs
+        )
