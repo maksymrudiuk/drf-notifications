@@ -1,4 +1,11 @@
-from .generics import EmailModelNotification, EmailMultiAlternativesModelNotification
+from .generics import (
+    EmailModelNotification,
+    EmailMultiAlternativesModelNotification,
+    WebSocketNotification
+)
 
 
-__all__ = ['EmailModelNotification', 'EmailMultiAlternativesModelNotification']
+__all__ = [
+    'EmailModelNotification', 'EmailMultiAlternativesModelNotification',
+    'WebSocketNotification'
+]

@@ -17,15 +17,15 @@ def run():
 
     sender = CeleryDefaultSender(
         notification_slug,
-        'EmailMultiAlternativesModelNotification',
+        'WebSocketNotification',
         recipient,
         context
     )
     sync_sender = SyncDefaultSender(
         notification_slug,
-        'EmailMultiAlternativesModelNotification',
+        'WebSocketNotification',
         recipient,
         context
     )
-    sender.send()
+    # sender.send()
     sync_sender.send()

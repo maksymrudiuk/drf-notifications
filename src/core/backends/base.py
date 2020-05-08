@@ -5,9 +5,9 @@ from django.utils.html import strip_tags
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 
-from core.senders.default import SyncDefaultSender
 from core.utils import get_object_or_none
 from .decorators import logging_sending_errors
+from .utils import validate_template_string
 
 
 class BaseModelNotification:
@@ -105,7 +105,7 @@ class BaseModelNotification:
             subject {Template} -- Notification subject template.
         """
 
-        subject_template = self.validate_template_string(self.notification.subject)
+        subject_template = validate_template_string(self.notification.subject)
         return Template(subject_template)
 
     @staticmethod
@@ -116,23 +116,6 @@ class BaseModelNotification:
             subject {str} -- Notification validated subject.
         """
         return strip_tags(subject).replace('\r', '').replace('\n', '')
-
-    @staticmethod
-    def validate_template_string(template_string):
-
-        clean_template = template_string
-
-        replace_map = (
-            ("{{ ", "{{"),
-            (" }}", "}}"),
-            ("&nbsp;}}", "}}"),
-            ("{{&nbsp;", "{{"),
-        )
-
-        for _from, _to in replace_map:
-            clean_template = clean_template.replace(_from, _to)
-
-        return clean_template
 
 
 class ModelNotification(BaseModelNotification):
