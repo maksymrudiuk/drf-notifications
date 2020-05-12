@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'ckeditor',
+    'fcm_django',
 
     # Locale
     'core',
