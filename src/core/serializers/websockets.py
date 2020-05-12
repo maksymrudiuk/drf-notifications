@@ -1,7 +1,5 @@
 from collections import OrderedDict
 
-from django.utils.html import strip_tags
-
 from rest_framework import serializers
 
 from .mixins import RenderSerializerMixin
