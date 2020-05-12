@@ -2,11 +2,15 @@ import logging
 
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 
-from core.serializers.websockets import WebSocketNotificationSerializer
+from fcm_django.models import FCMDevice
+
+from core.serializers.websockets import WebSocketNotificationSerializer, FCMNotificationSerializer
 from core.consumers import NotificationConsumer
 from .emails import BaseEmailModelNotification
 from .websockets import BaseWebSocketNotification
+from .push import BasePushNotification
 from .formatters import ContentHTMLFormatter
+
 
 logger = logging.getLogger('django')
 
@@ -34,3 +38,9 @@ class WebSocketNotification(BaseWebSocketNotification):
     @staticmethod
     def get_group_name(recipient):
         return NotificationConsumer.group_name(recipient)
+
+
+class FirebasePushNotification(BasePushNotification):
+
+    device_queryset = FCMDevice.objects.all()
+    serializer_class = FCMNotificationSerializer
