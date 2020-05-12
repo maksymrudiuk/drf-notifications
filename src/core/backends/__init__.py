@@ -1,11 +1,12 @@
 from .generics import (
     EmailModelNotification,
     EmailMultiAlternativesModelNotification,
-    WebSocketNotification
+    WebSocketNotification,
+    FirebasePushNotification
 )
 
 
 __all__ = [
     'EmailModelNotification', 'EmailMultiAlternativesModelNotification',
-    'WebSocketNotification'
+    'WebSocketNotification', 'FirebasePushNotification'
 ]

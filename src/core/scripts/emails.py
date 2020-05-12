@@ -17,13 +17,13 @@ def run():
 
     sender = CeleryDefaultSender(
         notification_slug,
-        'WebSocketNotification',
+        'FirebasePushNotification',
         recipient,
         context
     )
     sync_sender = SyncDefaultSender(
         notification_slug,
-        'WebSocketNotification',
+        'FirebasePushNotification',
         recipient,
         context
     )

@@ -4,7 +4,8 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from fcm_django.models import FCMDevice
 
-from core.serializers.websockets import WebSocketNotificationSerializer, FCMNotificationSerializer
+from core.serializers.websockets import WebSocketNotificationSerializer
+from core.serializers.push import FCMNotificationSerializer
 from core.consumers import NotificationConsumer
 from .emails import BaseEmailModelNotification
 from .websockets import BaseWebSocketNotification

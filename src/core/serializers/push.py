@@ -9,6 +9,6 @@ class FCMNotificationSerializer(RenderSerializerMixin, serializers.BaseSerialize
 
     def to_representation(self, instance):
         return OrderedDict({
-            "title": self.render_message(instance.subject),
-            "body": self.render_message(instance.message)
+            "title": self.render_content(instance.subject),
+            "body": self.render_content(instance.short_message)
         })
