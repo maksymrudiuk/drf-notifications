@@ -14,7 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
@@ -24,4 +27,12 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-]
+    path('core/', include('core.urls')),
+    # path(
+    #     "firebase-messaging-sw.js/",
+    #     TemplateView.as_view(
+    #         template_name="core/firebase-messaging-sw.js",
+    #         content_type="application/javascript"
+    #     )
+    # )
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
